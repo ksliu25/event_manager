@@ -4,10 +4,10 @@
   <title>Thank You!</title>
 </head>
 <body>
-  <h1>Thanks <%= name %></h1>
+  <h1>Thanks Colin</h1>
   <p>Thanks for coming to our conference.  We couldn't have done it without you!</p>
   
-  <p>Please verify that your number is <%= phone %> the next time you vote!</p>
+  <p>Please verify that your number is 4018685000 the next time you vote!</p>
 
   <p>
     Political activism is at the heart of any democracy and your voice needs to be heard.
@@ -16,12 +16,22 @@
 
   <table>
   <tr><th>Name</th><th>Website</th></tr>
-    <% legislators.each do |legislator| %>
+    
       <tr>
-        <td><%= "#{legislator.first_name} #{legislator.last_name}" %></td>
-        <td><%= "#{legislator.website}" %></td>
+        <td>Joseph Kennedy</td>
+        <td>http://kennedy.house.gov</td>
       </tr>
-    <% end %>
+    
+      <tr>
+        <td>Elizabeth Warren</td>
+        <td>http://www.warren.senate.gov</td>
+      </tr>
+    
+      <tr>
+        <td>Edward Markey</td>
+        <td>http://www.markey.senate.gov</td>
+      </tr>
+    
   </table>
 </body>
 </html>
