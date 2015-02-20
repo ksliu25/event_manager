@@ -46,7 +46,6 @@ contents = CSV.open "event_attendees.csv", headers: true, header_converters: :sy
 template_letter = File.read "form_letter.erb"
 erb_template = ERB.new template_letter
 
-
 contents.each do |row|
     #letter generation 
     id = row[0]
@@ -110,7 +109,7 @@ def median(array)
   sorted = array.sort
   len = sorted.length
   #accounts for odd and even numbers -- thanks stackoverflow!
-  return (sorted[(len - 1) / 2] + sorted[len / 2]) / 2.0
+  return (sorted[(len - 1) / 2] + sorted[len / 2]) / 2
 end
 
 time_arr = []
@@ -131,7 +130,9 @@ avg_day = date_w(raw_day)
 sorted_day = day_arr.sort
 median_day = date_w(median(day_arr))
 
+
 peak_hours = File.read "peakhours.erb"
 peak_erb_template = ERB.new peak_hours
 peak = peak_erb_template.result(binding)
 peak_gen(peak)
+
