@@ -1,6 +1,7 @@
 require "csv"
 require "sunlight/congress"
 require "erb"
+require "date"
 
 Sunlight::Congress.api_key = "e179a6973728c4dd3fb1204283aaccb5"
 
@@ -45,6 +46,22 @@ contents = CSV.open "event_attendees.csv", headers: true, header_converters: :sy
 template_letter = File.read "form_letter.erb"
 erb_template = ERB.new template_letter
 
+  #here's my actual date_time
+  def date_time(dt_str)
+	#strptime parses and turns the string into a ruby time object
+	#stfr is the format which matches the string we are given
+	#finally, we are looking for the hour at which the date and time is given
+	format = "%D %H" 
+	dt = DateTime.strptime(dt_str, format)
+	return dt.hour
+end
+
+time_arr = []
+contents.each do |row|
+	p clean_zipcode(row[:zipcode])
+end
+
+=begin
 contents.each do |row|
     #letter generation 
     id = row[0]
@@ -53,8 +70,20 @@ contents.each do |row|
     phone = clean_phone(row[:homephone])
     legislators = legislators_by_zipcode(zipcode)
     form_letter = erb_template.result(binding)
-    save_thank_you_letters(id, form_letter)
-  end
+    #save_thank_you_letters(id, form_letter)
+    time_arr << date_time(row[:regdate])
+end
+=end
+puts contents
+p time_arr
+  
+contents.each do |row|
+	time_arr << date_time(row[:regdate])
+end
+
+
+p time_arr
+p time_arr.inject {|product, value| product + value}
 
 #Iteration 2 and 3
 #this creates our data in a readable format for our boss into html/erb
@@ -68,15 +97,6 @@ contents.each do |row|
 	  end
   end
 
-  #here's my actual date_time
-  def date_time(dt_str)
-	#strptime parses and turns the string into a ruby time object
-	#stfr is the format which matches the string we are given
-	#finally, we are looking for the hour at which the date and time is given
-	format = "%D %H" 
-	dt = DateTime.strptime(dt_str, format)
-	return dt.hour
-end
 
 def standard_time(num)
 	if num < 12
@@ -112,35 +132,15 @@ end
 time_arr = []
 day_arr = []
 
-#For some reason I have to redfine contents once again here, why is that??
-contents = CSV.open "event_attendees.csv", headers: true, header_converters: :symbol
 contents.each do |row|
     #data gathering
     time_arr << date_time(row[:regdate])
     day_arr << date_day(row[:regdate])
 end
 
-hr_freq = {}
-
-time_arr.each do |time|
-	hr_freq[time] = 0 unless hr_freq.include?(time)
-	hr_freq[time] += 1
-end
-
-
-hr_freq
 avg_time = standard_time(time_arr.inject{|product, value| product + value} / time_arr.size)
 sorted_time = time_arr.sort
 median_time = standard_time(median(time_arr))
-
-
-day_freq = {}
-
-day_arr.each do |day|
-	day_freq[day] = 0 unless day_freq.include?(day)
-	day_freq[day] += 1
-end
-
 
 raw_day = day_arr.inject {|product, value| product + value} / day_arr.size
 avg_day = date_w(raw_day)
@@ -151,5 +151,4 @@ median_day = date_w(median(day_arr))
 peak_hours = File.read "peakhours.erb"
 peak_erb_template = ERB.new peak_hours
 peak = peak_erb_template.result(binding)
-peak_gen(peak)
-
+#peak_gen(peak)
