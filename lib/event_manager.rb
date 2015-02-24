@@ -100,8 +100,6 @@ def date_w(num)
 	return day_hash[num.to_s]
 end
 
-
-
 def median(array)
   sorted = array.sort
   len = sorted.length
@@ -122,13 +120,15 @@ end
 
 hr_freq = {}
 
-time_arr.each do |time|
+arr_time = time_arr.map {|x| standard_time(x)}
+
+arr_time.each do |time|
 	hr_freq[time] = 0 unless hr_freq.include?(time)
 	hr_freq[time] += 1
 end
 
 
-hr_freq
+
 avg_time = standard_time(time_arr.inject{|product, value| product + value} / time_arr.size)
 sorted_time = time_arr.sort
 median_time = standard_time(median(time_arr))
@@ -136,7 +136,9 @@ median_time = standard_time(median(time_arr))
 
 day_freq = {}
 
-day_arr.each do |day|
+freq_day = day_arr.map {|x| date_w(x)}
+
+freq_day.each do |day|
 	day_freq[day] = 0 unless day_freq.include?(day)
 	day_freq[day] += 1
 end
